@@ -31,11 +31,10 @@
   display: block;
   margin: 0;
   width: 100%;
-  font-family: sans-serif;
+  font-family: inherit;
   font-size: 18px;
   appearance: none;
   box-shadow: none;
-  border-radius: none;
   padding: 10px;
   border: solid 1px #dcdcdc;
   transition: box-shadow 0.3s, border 0.3s;
@@ -55,7 +54,7 @@
 }
 
 .notif {
-background-color: rgba(255, 131, 131, 1);
+background-color: rgba(255, 180, 131, 1);
 height: 50px;
 margin-bottom: 10px;
 text-align: center;
@@ -63,9 +62,10 @@ border-radius: 2px;
 padding: 15px 0;
 font-weight: 400;
 margin-top: -60px;
+border: 2px solid white;
 }
 
-#password, #RePassword, #SignEmail {
+#password {
   margin-top: 20px;
 }
 

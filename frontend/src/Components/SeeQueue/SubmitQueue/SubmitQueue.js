@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { submitQueue } from '../../../../Actions/QueueAction';
+import QueueStatus from './QueueStatus';
+
+import { submitQueue } from '../../../Actions/QueueAction';
 
 import './SubmitQueue.css';
 
@@ -18,7 +20,14 @@ class SubmitQueue extends Component {
     }
   }
 
+  statusButtonClicked = (status) => {
+    let queue = this.state.queue
+    queue.status = status
+    this.setState({queue: queue})
+  }
+
   onChange = (event) => {
+    event.preventDefault();
     let queue = this.state.queue;
     if(event.target.id==="pic"){
       this.setState({
@@ -32,7 +41,8 @@ class SubmitQueue extends Component {
     })
   }
 
-  postQueue = () => {
+  postQueue = (event) => {
+    event.preventDefault();
     if(this.props.user._id){
       if(!this.state.pic){
         this.setState({
@@ -40,6 +50,15 @@ class SubmitQueue extends Component {
           adminMessage: "Please upload a picture of Queue"
         })
       }else{
+
+        if(this.state.user.role==="clinicAdmin"&&!this.state.queue.status){
+          this.setState({
+            missing: true,
+            adminMessage: "Please choose a clinic status"
+          })
+          return;
+        }
+
         let newQueue = this.state.queue;
         newQueue.user_id = this.props.user._id;
         newQueue.clinic_id = this.props.clinic._id;
@@ -87,6 +106,10 @@ class SubmitQueue extends Component {
                    onChange={this.onChange}
                    />
           </div>
+
+          <label>Please comment on Queue Status</label>
+          <QueueStatus onClick={this.statusButtonClicked}/>
+
           <div className="form-group">
             <label>Comments</label>
             <textarea id="comment"
@@ -96,16 +119,7 @@ class SubmitQueue extends Component {
                       onChange={this.onChange}
                       value={this.state.queue.comment? this.state.queue.comment: ""}/>
           </div>
-          {
-            this.state.submitSuccessful ? (
-              <button type="submit" className="btn btn-primary queueButton" onClick={this.closeQueueBox}>back to Clinic Info</button>
-            ):(
-              <div>
-              <button type="submit" className="btn btn-primary queueButton" onClick={this.postQueue}>Submit</button>
-              <button type="submit" className="btn btn-danger queueButton" onClick={this.closeQueueBox}>Discard and go back to Clinic Info</button>
-              </div>
-            )
-          }
+          <button type="submit" className="btn btn-primary queueButton" onClick={this.postQueue}>Submit</button>
       </div>
     );
   }

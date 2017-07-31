@@ -60,11 +60,12 @@ export const localSignup = (credentials) => {
   return(dispatch) => {
     axios.post('/auth/signup', credentials)
     .then((response) => {
-      const data = response.date;
+      const data = response.data;
       //dispatch(getUser());
 
       if(data.error){
         console.log(data.message);
+        dispatch(userNotification(data.message));
       }else {
         console.error("AJAX: Logged on @ '/auth/user'");
         window.location.href = "/";
@@ -72,7 +73,8 @@ export const localSignup = (credentials) => {
     })
     .catch((error) => {
       console.error("AJAX: Logged on @ '/auth/signup'");
-      window.location.href = '/';
+      console.log('error: '+ error.message)
+      //window.location.href = '/';
     });
   }
 }

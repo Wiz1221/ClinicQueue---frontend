@@ -6,10 +6,13 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { min, max } from 'd3-array';
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
+import { Link } from 'react-router-dom';
 
-import QueueList from '../Queue/QueueList';
 import Subscribe from '../Subscribe/Subscribe';
-import SubmitQueue from '../SubmitQueue/SubmitQueue';
+import QueueList from '../Queue/QueueList';
+
+import { userNotification } from '../../../../Actions/UserAction';
+import { clearNotif } from '../../../../Actions/AppAction';
 
 import './PolyClinicInfo.css';
 
@@ -24,6 +27,13 @@ class PolyClinicInfo extends Component {
   }
 
   onClick = (event) => {
+    if(!this.props.user._id){
+      this.props.userNotification("Please Login to Subscribe");
+      setTimeout(() => {
+        this.props.clearNotif();
+      },2000);
+      return;
+    }
     this.setState({
       showWhichComponent: event.target.id
     })
@@ -76,9 +86,9 @@ class PolyClinicInfo extends Component {
     const x = scaleTime().range([0, width]),
           y = scaleLinear().range([height, 0]),
           xAxis = axisBottom(x).tickFormat(timeFormat('%H')),
-          yAxis = axisLeft(y)//.ticks(4).orient("left");
+          yAxis = axisLeft(y);//.ticks(4).orient("left");
 
-    // A line generator, for the dark stroke.
+    // A line generator for historicalQueue, for the dark stroke.
     const line = d3.line()
                   .x(function(d) { return x(d.date); })
                   .y(function(d) { return y(d.queueQty); })
@@ -86,7 +96,8 @@ class PolyClinicInfo extends Component {
 
     // Compute the minimum and maximum date, and the maximum queue.
     x.domain([hQ[0].date, hQ[hQ.length - 1].date]);
-    y.domain([0,max(data, function(c) { return max(c.values, function(d) { return parseFloat(d.queueQty); }); })+10]);
+    //y.domain([0,max(data, function(c) { return max(c.values, function(d) { return parseFloat(d.queueQty); }); })+10]);
+    y.domain([0,220]);
 
 
     const colors  = scaleOrdinal(schemeCategory10)
@@ -117,6 +128,7 @@ class PolyClinicInfo extends Component {
               .attr("transform", "translate(" + width + ",0)")
               .call(yAxis)
               .text("No. of people waiting");
+
         qLine.selectAll('.line')
              .data([hQ,cQ])
              .enter()
@@ -142,6 +154,8 @@ class PolyClinicInfo extends Component {
                .attr('d', function(d) {
                  return line(d);
                });
+        break;
+        default:
         break;
     }
 
@@ -232,12 +246,13 @@ class PolyClinicInfo extends Component {
   }
 
   render() {
+    const differenceQueue = parseFloat(this.props.activeClinic.properties.differenceQueue);
     return (
       <div>
         <h3>{this.props.activeClinic.properties.name_full}</h3>
-        <h4>is now <span className={this.classParser(parseFloat(this.props.activeClinic.properties.differenceQueue))}>
-        {parseFloat(this.props.activeClinic.properties.differenceQueue).toFixed(0)}%</span>
-        {parseFloat(this.props.activeClinic.properties.differenceQueue) > 0 ? " busier than the average hourly queue" : " less busy compared to the average hourly queue"}</h4>
+        <h4>is now <span className={this.classParser(differenceQueue)}>
+        {differenceQueue > 0 ? (differenceQueue.toFixed(0) + "%more") :
+        (Math.abs(differenceQueue.toFixed(0)) + "%less" )}</span> crowded than the average queue at this hour</h4>
 
         <svg ref={node => this.node = node}
               viewBox="0 0 960 500">
@@ -245,14 +260,12 @@ class PolyClinicInfo extends Component {
 
         {
           this.state.showWhichComponent==="subscribeClinicButton" ?  (
-            <Subscribe clinic={this.props.activeClinic} backToClinicInfo={this.backToClinicInfo}/>
-          ) : this.state.showWhichComponent==="submitQueueButton" ? (
-            <SubmitQueue clinic={this.props.activeClinic} backToClinicInfo={this.backToClinicInfo}/>
+            <Subscribe backToClinicInfo={this.backToClinicInfo} />
           ) : (
             <div>
-              <QueueList queue={this.props.activeClinic.queue}/>
-              <button id="subscribeClinicButton" type="submit" className="btn btn-info" onClick={this.onClick}>Subscribe to this clinic</button>
-              <button id="submitQueueButton" type="submit" className="btn btn-info" onClick={this.onClick}>Submit a Queue Report</button>
+              <QueueList queue= {this.props.activeClinic.queue}/>
+              <Link to="/seeQueue"><button id="subscribeClinicButton" type="submit" className="btn btn-info">See more queues or Submit a queue report</button></Link>
+              <button id="subscribeClinicButton" type="submit" className="btn btn-info" onClick={this.onClick}>Subscribe to this Clinic</button>
             </div>
           )
         }
@@ -277,13 +290,15 @@ class PolyClinicInfo extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    activeClinic: state.activeClinic
+    activeClinic: state.activeClinic,
+    user: state.user
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // activeClinic: (clinic) => {dispatch(activeClinic(clinic));},
+    userNotification: (message) => {dispatch(userNotification(message));},
+    clearNotif: () => {dispatch(clearNotif());}
   }
 }
 

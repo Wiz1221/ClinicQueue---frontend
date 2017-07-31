@@ -10,19 +10,21 @@ class QueueList extends Component {
 
   renderQueueItem = () => {
     let queueArray = this.props.queue;
+    // an empty array is truthy; queueArray is [] by default. check for first array element instead
+    if (this.props.queue.length > 0) {
+      const latestQueue = queueArray[queueArray.length-1]
+      return (<QueueItem queue={latestQueue}
+                        key={latestQueue._id}
+                        id={latestQueue._id}/>)
 
-    if (!this.props.queue) {
-      return  (<div>No Queues yet</div>)
     } else {
-      return queueArray.map((queue) => {
-        return (
-          <QueueItem queue={queue}
-                    key={queue._id}
-                    id={queue._id}
-                     />
-        )
-      });
-    }
+        return  (<div>No Queue reports yet</div>)
+      }
+      // return queueArray.map((queue) => {
+      //   return (
+      //     <QueueItem queue={queue}
+      //                key={queue._id}
+      //                id={queue._id}/>
   }
 
   render() {

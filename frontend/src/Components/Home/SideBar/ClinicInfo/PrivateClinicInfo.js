@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import QueueList from '../Queue/QueueList';
 import Subscribe from '../Subscribe/Subscribe';
-import SubmitQueue from '../SubmitQueue/SubmitQueue';
-
+import QueueList from '../Queue/QueueList';
 
 
 class PrivateClinicInfo extends Component {
@@ -34,13 +33,11 @@ class PrivateClinicInfo extends Component {
         {
           this.state.showWhichComponent==="subscribeClinicButton" ?  (
             <Subscribe clinic={this.props.activeClinic} backToClinicInfo={this.backToClinicInfo}/>
-          ) : this.state.showWhichComponent==="submitQueueButton" ? (
-            <SubmitQueue clinic={this.props.activeClinic} backToClinicInfo={this.backToClinicInfo}/>
           ) : (
             <div>
-              <QueueList queue={this.props.activeClinic.queue}/>
-              <button id="subscribeClinicButton" type="submit" className="btn btn-info" onClick={this.onClick}>Subscribe to this clinic</button>
-              <button id="submitQueueButton" type="submit" className="btn btn-info" onClick={this.onClick}>Submit a Queue Report</button>
+              <QueueList queue= {this.props.activeClinic.queue}/>
+              <Link to="/seeQueue"><button id="subscribeClinicButton" type="submit" className="btn btn-info">See more queues or Submit a queue report</button></Link>
+              <button id="subscribeClinicButton" type="submit" className="btn btn-info" onClick={this.onClick}>Subscribe to this Clinic</button>
             </div>
           )
         }

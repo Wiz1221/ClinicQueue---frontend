@@ -1,0 +1,11 @@
+.queueGalleryContainer {
+  width: 60%;
+  height: 100vh;
+  display: inline-block;
+}
+
+.submitQueueContainer {
+  width: 40%;
+  height: 100vh;
+  display: inline-block;
+}

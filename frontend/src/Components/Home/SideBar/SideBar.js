@@ -15,7 +15,8 @@ class SideBar extends Component {
     return (
       <div className="sideBar">
         { this.props.activeClinic._id ? (
-            this.props.activeClinic.type === "private"? ( <PrivateClinicInfo/> ): (<PolyClinicInfo/>)
+            this.props.activeClinic.properties.type === "Private"? ( <PrivateClinicInfo/> ): (<PolyClinicInfo/>)
+
           ) : null
         }
       </div>

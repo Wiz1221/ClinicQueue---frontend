@@ -19,6 +19,23 @@ class NotificationBar extends React.Component {
     },5000)
   }
 
+  renderNotificationMessage = () => {
+    switch (this.props.notification) {
+      case "Please Login to Subscribe":
+        return (<div className={this.state.class}><p>Please Login to Subscribe</p></div>)
+        break;
+      default:
+        if(this.props.user._id){
+          return (
+            <div className={this.state.class}><p>Welcome {this.props.user.username}!</p></div>
+          )
+        }else{
+          return;
+        }
+        break;
+    }
+  }
+
   consoleLog = () => {
     console.log(this.state.class);
   }
@@ -26,21 +43,25 @@ class NotificationBar extends React.Component {
   render() {
     return (
       <div>
-        {this.props.user._id ?
-          <div className={this.state.class}><p>Welcome {this.props.user.username}!</p></div>
-          : <div></div> }
+        {this.renderNotificationMessage()}
         {this.notifDisappear()}
       </div>
     );
   }
 }
 
+// {this.props.user._id ?
+//   <div className={this.state.class}><p>{this.renderNotificationMessage()}</p></div>
+//   : <div></div> }
+// {this.notifDisappear()}
+
 NotificationBar.propTypes = {
 };
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    notification: state.notification
     //clinic: state.clinic,
     //activeClinic: state.activeClinic
   }
