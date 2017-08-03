@@ -9,7 +9,7 @@ class QueueItem extends Component {
     const queue = this.props.queue;
     return (
       <div >
-        {queue.user.role =="clinicAdmin" ?
+        {queue.user.role =="clinicAdmin" && queue.user.myClinic === this.props.activeClinic._id?
         (<div className={"queueItem "+ queueBorderParse(queue.status) + " container"}>
           <img src={queue.pic} className="queue-image"/>
           <p className="queue-timestamp">Submitted at {dateParse(queue.createdAt,8)}</p>

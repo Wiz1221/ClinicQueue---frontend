@@ -18,7 +18,7 @@ const ClinicReducer = (state = [], action) => {
     case 'STORE_SUBSCRIBE_IN_CLINIC':
       return state.map((clinic,index) => {
         if(clinic._id === action.clinic_id){
-          let newSubscribeArray = clinic.subscribe
+          let newSubscribeArray = {...clinic}.subscribe
           newSubscribeArray.push(action.newSubscribe);
           clinic.subscribe = newSubscribeArray
         }
@@ -28,7 +28,7 @@ const ClinicReducer = (state = [], action) => {
     case 'DELETE_QUEUE_IN_CLINIC':
       return state.map((clinic,index) => {
         if(clinic._id === action.clinic_id){
-          clinic.queue = clinic.queue.filter((queue,index) => {
+          clinic.queue = {...clinic}.queue.filter((queue,index) => {
             return queue._id !== action.queue_id
           })
         }
@@ -38,7 +38,7 @@ const ClinicReducer = (state = [], action) => {
     case 'DELETE_SUBSCRIBE_IN_CLINIC':
       return state.map((clinic,index) => {
         if(clinic._id === action.subscribeInfo.clinic_id){
-          clinic.subscribe = clinic.subscribe.filter((subscribe,index) => {
+          clinic.subscribe = {...clinic}.subscribe.filter((subscribe,index) => {
             return subscribe._id !== action.subscribeInfo.subscribe_id
           })
         }

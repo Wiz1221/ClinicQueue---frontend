@@ -21,12 +21,13 @@ class QueueGalleryForUser extends Component {
       return  (<div className="NoQueue">No Queues yet</div>)
     } else {
       let queueFromUser = queueArray.filter((queue,index) => {
-        return queue.user._id ? queue.user.role === "regularUser" || "" : null
+        return queue.user.myClinic ? queue.user.myClinic !== this.props.activeClinic._id : true
       })
       return queueFromUser.map((queue) => {
         return (
           <Carousel.Item>
           <QueueItem queue={queue}
+                      activeClinic={this.props.activeClinic}
                     key={queue._id}
                     id={queue._id}/>
                     </Carousel.Item>

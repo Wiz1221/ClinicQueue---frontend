@@ -67,15 +67,13 @@
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   transition: all 0.3s;
-  width: 30%;
+  width: 80%;
   border: 2px solid #7456e9;
   color: #7456e9;
   overflow: hidden;
   margin-top: 10px;
-  margin-left:0;
   background-color: white;
   border-radius: 2px;
-  margin-left: 4px;
 }
 
 .clinic-back-btn:hover {

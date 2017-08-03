@@ -6,8 +6,8 @@ import { sortingAlgorithm } from '../API/API';
 import io from 'socket.io-client';
 
 
-export const socket = io.connect('https://ec2-54-255-153-99.ap-southeast-1.compute.amazonaws.com:443/');
-// export const socket = io.connect('http://localhost:3001')
+// export const socket = io.connect('https://ec2-54-255-153-99.ap-southeast-1.compute.amazonaws.com:443/');
+export const socket = io.connect('http://localhost:3001')
 
 
 
